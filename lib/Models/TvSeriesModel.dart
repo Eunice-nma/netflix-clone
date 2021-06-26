@@ -33,9 +33,9 @@ class TvSeriesModel {
   factory TvSeriesModel.fromJson(Map<String, dynamic> json) {
     return TvSeriesModel(
       id: json["id"],
-        original_title: json["original_title"],
+        original_title: json["original_name"],
         overview: json["overview"],
-        release_date: json["release_date"],
+        release_date: json["first_air_date"],
         vote_average: json["vote_average"],
         poster_path: json["poster_path"],
         popularity: json["popularity"],

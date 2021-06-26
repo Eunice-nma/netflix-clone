@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/customWidgets/CustomCard.dart';
+import 'package:netflix_clone/widgets/CustomCard.dart';
 import 'package:get/get.dart';
 import 'package:netflix_clone/pages/InfoPage.dart';
 import 'package:netflix_clone/utilities/myListModal.dart';

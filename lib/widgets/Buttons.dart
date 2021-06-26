@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/Utilities/const.dart';
+import 'package:netflix_clone/Utilities/Constants.dart';
 
 class CustomButtons extends StatelessWidget {
   final String title;

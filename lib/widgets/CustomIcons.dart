@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/Utilities/const.dart';
+import 'package:netflix_clone/Utilities/Constants.dart';
 
 class CustomIcon extends StatelessWidget {
   final IconData icon;
@@ -16,7 +16,7 @@ class CustomIcon extends StatelessWidget {
            Icon(icon,color: kIconColor ,),
             Text(
               title,
-              style: kbillBoardText,
+              style: kBillBoardText,
             ),
             
           ],

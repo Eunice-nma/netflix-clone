@@ -1,18 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/Components/NowPlaying.dart';
 import 'package:netflix_clone/Components/TrendingMovies.dart';
 import 'package:netflix_clone/Components/TvSeries.dart';
 import 'package:netflix_clone/Components/UpcomingMovies.dart';
-import 'package:netflix_clone/Models/PopularMoviesModel.dart';
+import 'package:netflix_clone/Models/NowPlayingModel.dart';
 import 'package:netflix_clone/Utilities/GetImage.dart';
-
-import 'package:netflix_clone/Utilities/const.dart';
 import 'package:netflix_clone/services/Services.dart';
 import 'package:netflix_clone/widgets/Buttons.dart';
-import 'package:netflix_clone/widgets/CutomIcons.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:netflix_clone/widgets/CustomIcons.dart';
+import 'package:get/get.dart';
+import 'InfoPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<PopularMoviesModel>> popularMovies;
+  Future<List<NowPlayingModel>> nowPlayingMovies;
 
   Api _api;
 
@@ -28,13 +26,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _api = Api();
-    popularMovies = _api.fetchPopularMovies();
-    print(popularMovies);
+    nowPlayingMovies = _api.fetchNowPlayingMovies();
+    print(nowPlayingMovies);
   }
 
   @override
   Widget build(BuildContext context) {
-    var idx = 1;
+    // var idx = 1;
     // var height = MediaQuery.of(context).size.height;
     // var width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -43,45 +41,30 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             child: FutureBuilder(
-                future: popularMovies,
+                future: nowPlayingMovies,
                 // ignore: missing_return
                 builder: (context, AsyncSnapshot snapshot) {
                   // ignore: unnecessary_statements
-                  List<CachedNetworkImage> cachedImages =
-                      List<CachedNetworkImage>.empty(growable: true);
+                  // List<CachedNetworkImage> cachedImages =
+                  //     List<CachedNetworkImage>.empty(growable: true);
                   if (snapshot.connectionState == ConnectionState.none &&
                       snapshot.hasError) {
                     return Center(
-                      child: Text('An Error Occured'),
+                      child: Text('An Error Occurred'),
                     );
                   } else if (snapshot.hasData) {
                     return Stack(children: <Widget>[
                       Container(
-                        child: CarouselSlider.builder(
-                            itemCount: snapshot.data.length,
-                            options: CarouselOptions(
-                                height: 350,
-                                autoPlay: true,
-                                enableInfiniteScroll: false,
-                                enlargeCenterPage: true,
-                                scrollDirection: Axis.horizontal,
-                                scrollPhysics: const BouncingScrollPhysics(),
-                                enlargeStrategy:
-                                    CenterPageEnlargeStrategy.height,
-                                autoPlayCurve: Curves.easeOutSine,
-                                autoPlayInterval: Duration(seconds: 30)),
-                            itemBuilder: (ctx, int index, x) {
-                              return snapshot.data[index].poster_path == null
-                                  ? Text("No poster yet")
-                                  : CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      imageUrl: getImagePoster(
-                                          snapshot.data[index].poster_path),
-                                    
-                                    );
-                            }),
-                        // height:500,
-                       
+                        height: 350,
+                        child: Center(
+                          child:  snapshot.data[5].poster_path == null
+                              ? Text("No poster yet")
+                              : CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: getImagePoster(
+                                snapshot.data[5].poster_path),
+                          ),
+                        ),
                       ),
                       Container(
                         height: 350.0,
@@ -115,9 +98,14 @@ class _HomePageState extends State<HomePage> {
                                 title: "Play",
                                 icon: Icons.play_arrow,
                               ),
-                              CustomIcon(
-                                icon: Icons.info,
-                                title: "Info",
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(()=>InfoPage(),arguments: snapshot.data[5]);
+                                },
+                                child: CustomIcon(
+                                  icon: Icons.info,
+                                  title: "Info",
+                                ),
                               ),
                             ],
                           ),
@@ -126,7 +114,9 @@ class _HomePageState extends State<HomePage> {
                     ]);
                   } else {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                      ),
                     );
                   }
                 }),
@@ -177,7 +167,6 @@ class _HomePageState extends State<HomePage> {
           //4th List
           TvSeries(),
           //5th List
-
           // Container(
           //     width: double.infinity,
           //     padding: EdgeInsets.all(4),
@@ -215,3 +204,36 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+// class Carousel extends StatelessWidget {
+//   const Carousel({
+//     Key key,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return CarouselSlider.builder(
+//         itemCount: snapshot.data.length,
+//         options: CarouselOptions(
+//             height: 350,
+//             autoPlay: true,
+//             enableInfiniteScroll: false,
+//             enlargeCenterPage: true,
+//             scrollDirection: Axis.horizontal,
+//             scrollPhysics: const BouncingScrollPhysics(),
+//             enlargeStrategy:
+//                 CenterPageEnlargeStrategy.height,
+//             autoPlayCurve: Curves.easeOutSine,
+//             autoPlayInterval: Duration(seconds: 30),),
+//         itemBuilder: (ctx, int index, x) {
+//           return snapshot.data[index].poster_path == null
+//               ? Text("No poster yet")
+//               : CachedNetworkImage(
+//                   fit: BoxFit.fitWidth,
+//                   imageUrl: getImagePoster(
+//                       snapshot.data[index].poster_path),
+//
+//                 );
+//         },);
+//   }
+// }
